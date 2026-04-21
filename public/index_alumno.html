@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<!-- saved from url=(0055)https://sibila.uca.es/intranet_alum/HTML/dashboard.html -->
+<html lang="es">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <style data-fullcalendar=""></style>
+    <script async="" src="./assets/js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-S4BX5FGD41');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Intranet Alumnado - Universidad de Cádiz</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg"
+        href="./assets/logoFacultad.jpg">
+    <link rel="shortcut icon" type="image/jpeg"
+        href="./assets/logoFacultad.jpg">
+
+    <!-- Bootstrap CSS -->
+    <link href="./assets/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootswatch Journal theme for Bootstrap 5 -->
+    <link href="./assets/bootstrap(1).min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="./assets/all.min.css">
+
+    <!-- Utilidades (Toast y funciones comunes) -->
+    <script src="./assets/utilidades.js.descarga"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet"
+        href="./assets/dataTables.bootstrap5.min.css">
+
+    <!-- FullCalendar CSS -->
+    <link rel="stylesheet" href="./assets/index.global.min.css">
+
+    <!-- Quill CSS -->
+    <link href="./assets/quill.snow.css" rel="stylesheet">
+
+    <!-- Tagify CSS -->
+    <link href="./assets/tagify.css" rel="stylesheet">
+
+
+    <!-- Header CSS -->
+    <link rel="stylesheet" href="./assets/header.css">
+
+    <!-- Header CSS -->
+    <link rel="stylesheet" href="./assets/header.css">
+
+    <!-- Calendario CSS -->
+    <link rel="stylesheet" href="./assets/calendar.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./assets/estilos.css">
+
+    <style>
+        :root {
+            --primary-color: #787902;
+            --secondary-color: #96964A;
+            --accent-color: #DFDFB0;
+            --text-dark: #333;
+            --text-light: #666;
+            --bg-light: #f8f9fa;
+            --border-color: #dee2e6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Modal de detalle para dashboard
+        async function showNewsModalDashboard(id) {
+            try {
+                // Resolver base de API igual que en otras páginas (con fallback a config)
+                const base = (window.APP_CONFIG && APP_CONFIG.apiBaseUrl) ? APP_CONFIG.apiBaseUrl : (window.APP_CONFIG?.apiBaseUrl || '../PHP/api/');
+                const url = base + 'news.php?action=get_one&id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(getAuthToken()||'');
+                const res = await fetch(url);
+                const json = await res.json();
+                if (!json.success || !json.data) return;
+                const n = json.data;
+                let el = document.getElementById('viewNewsModal');
+                if (!el) {
+                    const temp = document.createElement('div');
+                    temp.innerHTML = `
+                      <div class=\"modal fade\" id=\"viewNewsModal\" tabindex=\"-1\">
+                        <div class=\"modal-dialog modal-lg modal-dialog-scrollable\"> 
+                          <div class=\"modal-content\">
+                            <div class=\"modal-header\">
+                              <h5 class=\"modal-title\" id=\"viewNewsTitle\"></h5>
+                              <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\"></button>
+                            </div>
+                            <div class=\"modal-body\">
+                              <div id=\"viewNewsMeta\" class=\"text-muted mb-2\"></div>
+                              <img id=\"viewNewsImage\" class=\"img-fluid rounded mb-3\" style=\"display:none\" alt=\"Imagen noticia\" />
+                              <div id=\"viewNewsContent\"></div>
+                            </div>
+                            <div class=\"modal-footer\">
+                              <button class=\"btn btn-secondary\" data-bs-dismiss=\"modal\">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`;
+                    document.body.appendChild(temp.firstElementChild);
+                    el = document.getElementById('viewNewsModal');
+                }
+                document.getElementById('viewNewsTitle').textContent = n.Titulo || 'Noticia';
+                document.getElementById('viewNewsMeta').innerHTML = `<span class=\"badge bg-primary me-2\">${n.Categoria || ''}</span> <small>Evento: ${n.Fecha_evento || ''} • Publicada: ${n.Fecha_publicacion || ''}</small>`;
+                const img = document.getElementById('viewNewsImage');
+                if (n.Imagen_url) { img.src = '../' + n.Imagen_url; img.style.display = 'block'; } else { img.style.display = 'none'; }
+                document.getElementById('viewNewsContent').innerHTML = n.Contenido || '';
+                new bootstrap.Modal(el).show();
+            } catch (e) { console.error('Error mostrando noticia:', e); }
+        } */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-light);
+            padding-bottom: 80px;
+            /* Espacio para la navegación inferior */
+            min-height: 100vh;
+        }
+
+        /* Header móvil */
+        .mobile-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-logo {
+            flex-shrink: 0;
+        }
+
+        .header-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-fallback {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-details {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .user-details span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .separator {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+        }
+
+        .header-actions {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .header-actions i {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .header-logout-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+        }
+
+        .header-logout-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Contenido principal */
+        .main-content {
+            padding: 20px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Tarjetas de contenido */
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-card h2 {
+            color: var(--text-dark);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .iframe-container {
+            width: 100%;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .iframe-container iframe {
+            border: none;
+            border-radius: 8px;
+        }
+
+        .social-media-card {
+            height: auto;
+            min-height: 650px;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+        }
+
+        /* Navegación inferior */
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            padding: 8px 20px 20px;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+        }
+
+        .nav-item.active .nav-icon {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .nav-item.active .nav-label {
+            color: var(--primary-color);
+        }
+
+        /* Indicador inferior del móvil */
+        .mobile-indicator {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+        }
+
+        .mobile-indicator-bar {
+            width: 128px;
+            height: 4px;
+            background: #000;
+            border-radius: 2px;
+        }
+
+        /* Secciones de contenido */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Dashboard Home */
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-section h2 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 15px;
+            }
+
+            .content-card {
+                padding: 15px;
+            }
+
+            .iframe-container iframe {
+                height: 400px;
+            }
+
+            .social-media-card {
+                min-height: 450px;
+            }
+
+            .quick-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header móvil -->
+    <div class="mobile-header">
+        <div class="header-content">
+            <div class="header-logo">
+                <img src="./assets/logoFacultad.jpg"
+                    alt="Logo Facultad"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span class="logo-fallback">LOGO</span>
+            </div>
+            <div class="header-info">
+                <div class="user-name" id="userInfo">JOSE MIGUEL MOTA MACIAS</div>
+                <div class="user-details">
+                    <span id="userEmail">pru@alum.uca.es</span>
+                    <span class="separator">•</span>
+                    <span id="cursoAcademico">2025/26</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <i class="fas fa-bell" id="pushBellIcon" onclick="togglePushSubscription()" style="cursor: pointer; transition: transform 0.2s;" title="Activar notificaciones push"></i>
+                <button class="header-logout-btn" onclick="logout()" title="Cerrar sesión">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <!-- Sección Inicio -->
+        <div class="content-section" id="home-section">
+            <div class="welcome-section">
+                <h2>¡Bienvenido/a!</h2>
+                <p id="welcomeMessage">¡Hola JOSE MIGUEL! Bienvenido/a a tu intranet.</p>
+                <p> !Importante!: Pulsa en Otros... y entra en tu PERFIL para definir tus asignaturas matriculadas,
+                    titulación, casa y otras opciones.</p>
+            </div>
+
+
+            <div class="content-card social-media-card">
+                <div class="iframe-container" style="text-align: center;">
+                    <iframe src="./assets/visor.html" width="100%"
+                        height="750" style="border:none; max-width: 520px; height: 800px;"
+                        title="Carrusel de Instagram de la FCCSSyCom">
+                    </iframe>
+                </div>
+            </div>
+
+
+            <div class="content-card" style="display:none">
+                <h2>Resumen Académico</h2>
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="asignaturasCount">6</div>
+                        <div class="stat-label">Asignaturas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="notasCount">12</div>
+                        <div class="stat-label">Notas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="horariosCount">4</div>
+                        <div class="stat-label">Horarios</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="mensajesCount">3</div>
+                        <div class="stat-label">Mensajes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-card" style="display:none">
+                <h2>Próximas Actividades</h2>
+                <div id="upcomingActivities">
+                    <p class="text-muted">No hay actividades próximas</p>
+                </div>
+            </div>
+
+            <!-- Card Incidencias -->
+            <div class="content-card">
+                <h2>Incidencias con Asignaturas</h2>
+                <div class="table-responsive">
+                    <div id="incidenciasTable_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-6"></div>
+                            <div class="col-sm-12 col-md-6">
+                                <div id="incidenciasTable_filter" class="dataTables_filter"><label>Buscar:<input
+                                            type="search" class="form-control form-control-sm" placeholder=""
+                                            aria-controls="incidenciasTable"></label></div>
+                            </div>
+                        </div>
+                        <div class="row dt-row">
+                            <div class="col-sm-12">
+                                <table id="incidenciasTable"
+                                    class="table table-striped table-hover align-middle dataTable no-footer"
+                                    style="width: 100%;" aria-describedby="incidenciasTable_info">
+                                    <thead>
+                                        <tr>
+                                            <th class="sorting sorting_asc" tabindex="0"
+                                                aria-controls="incidenciasTable" rowspan="1" colspan="1"
+                                                style="width: 0px;" aria-sort="ascending"
+                                                aria-label="Fecha: Activar para ordenar la columna de manera descendente">
+                                                Fecha</th>
+                                            <th class="sorting sorting_asc" tabindex="0"
+                                                aria-controls="incidenciasTable" rowspan="1" colspan="1"
+                                                style="width: 0px;"
+                                                aria-label="Hora: Activar para ordenar la columna de manera ascendente">
+                                                Hora</th>
+                                            <th class="sorting" tabindex="0" aria-controls="incidenciasTable"
+                                                rowspan="1" colspan="1" style="width: 0px;"
+                                                aria-label="Asignatura: Activar para ordenar la columna de manera ascendente">
+                                                Asignatura</th>
+                                            <th class="sorting" tabindex="0" aria-controls="incidenciasTable"
+                                                rowspan="1" colspan="1" style="width: 0px;"
+                                                aria-label="Grupo: Activar para ordenar la columna de manera ascendente">
+                                                Grupo</th>
+                                            <th class="sorting" tabindex="0" aria-controls="incidenciasTable"
+                                                rowspan="1" colspan="1" style="width: 0px;"
+                                                aria-label="Turno: Activar para ordenar la columna de manera ascendente">
+                                                Turno</th>
+                                            <th class="sorting" tabindex="0" aria-controls="incidenciasTable"
+                                                rowspan="1" colspan="1" style="width: 0px;"
+                                                aria-label="Tipo: Activar para ordenar la columna de manera ascendente">
+                                                Tipo</th>
+                                            <th class="sorting" tabindex="0" aria-controls="incidenciasTable"
+                                                rowspan="1" colspan="1" style="width: 0px;"
+                                                aria-label="Descripción: Activar para ordenar la columna de manera ascendente">
+                                                Descripción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="odd">
+                                            <td valign="top" colspan="7" class="dataTables_empty">Ningún dato disponible
+                                                en esta tabla</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-5">
+                                <div class="dataTables_info" id="incidenciasTable_info" role="status"
+                                    aria-live="polite">Mostrando registros del 0 al 0 de un total de 0 registros</div>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="incidenciasTable_paginate">
+                                    <ul class="pagination">
+                                        <li class="paginate_button page-item previous disabled"
+                                            id="incidenciasTable_previous"><a aria-controls="incidenciasTable"
+                                                aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1"
+                                                class="page-link">Anterior</a></li>
+                                        <li class="paginate_button page-item next disabled" id="incidenciasTable_next">
+                                            <a aria-controls="incidenciasTable" aria-disabled="true" role="link"
+                                                data-dt-idx="next" tabindex="-1" class="page-link">Siguiente</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carrusel de Noticias -->
+            <div class="content-card">
+                <h2>Noticias</h2>
+                <div id="newsCarouselsContainer">
+                    <div class="text-muted">No hay noticias para hoy</div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Sección Calendario eliminada: ahora vive en HTML/calendar.html -->
+
+        <!-- Sección Perfil -->
+        <div class="content-section" id="user-section">
+            <div class="content-card">
+                <h2>Mi Perfil</h2>
+                <div id="userProfile">
+                    <p class="text-muted">Cargando perfil...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Otros -->
+        <div class="content-section active" id="others-section">
+            <div class="content-card">
+                <h2>Gestiones</h2>
+                <div class="list-group">
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/profile.html"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-user me-2"></i>
+                        Modificar Perfil
+                    </a>
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/GoogleCalendar.html"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        Google Calendar
+                    </a>
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/asignar_pasaporte.html"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-passport me-2"></i>
+                        Asignar Pasaporte
+                    </a>
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/evaluacion_global.html"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        Evaluación global
+                    </a>
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/evaluacion_especial.html"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-chalkboard-teacher me-2"></i>
+                        Llamamientos especiales
+                    </a>
+
+                    <a href="https://sherryccsociales.uca.es/" target="_blank" rel="noopener noreferrer"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-eye me-2"></i>
+                        Trabajo Fin de Grado
+                    </a>
+                    <a href="https://ccsociales.uca.es/practicas-en-empresa/" target="_blank" rel="noopener noreferrer"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-eye me-2"></i>
+                        Prácticas en Empresa
+                    </a>
+                    <a href="https://sites.google.com/gm.uca.es/prestamodematerial/" target="_blank"
+                        rel="noopener noreferrer" class="list-group-item list-group-item-action">
+                        <i class="fas fa-futbol me-2"></i>
+                        Préstamo de Material
+                    </a>
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/graduacion.html"
+                        class="list-group-item list-group-item-action d-none" id="link-graduacion">
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        Inscripción al acto de Graduación
+                    </a>
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h2>Otras Funcionalidades</h2>
+                <div class="list-group">
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/contactar.html"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-envelope me-2"></i>
+                        Contactar
+                    </a>
+
+                    <a href="https://sibila.uca.es/intranet_alum/HTML/news_deportes.html"
+                        class="list-group-item list-group-item-action">
+                        <i class="fas fa-futbol me-2"></i>
+                        Noticias (Deportes)
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-card" id="delegadoCard" style="display:none">
+            <h2>Delegado/a</h2>
+            <div class="list-group">
+                <a href="https://sibila.uca.es/intranet_alum/HTML/news.html"
+                    class="list-group-item list-group-item-action">
+                    <i class="fas fa-newspaper me-2"></i>
+                    Noticias
+                </a>
+            </div>
+        </div>
+
+        <div class="content-card" id="deportesCard" style="display:none">
+            <h2>Deportes</h2>
+            <div class="list-group">
+                <a href="https://sibila.uca.es/intranet_alum/HTML/news_deportes.html"
+                    class="list-group-item list-group-item-action">
+                    <i class="fas fa-futbol me-2"></i>
+                    Noticias de Deportes
+                </a>
+            </div>
+        </div>
+
+        <!-- Navegación inferior -->
+        <div class="bottom-navigation">
+            <div class="nav-items">
+                <div class="nav-item" data-section="home">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="nav-label">Inicio</span>
+                </div>
+
+                <div class="nav-item" onclick="window.location.href='calendar.html'">
+                    <div class="nav-icon">
+                        <i class="fas fa-calendar"></i>
+                    </div>
+                    <span class="nav-label">Calendario</span>
+                </div>
+
+                <div class="nav-item" onclick="window.location.href='qr.html?v=<?php echo time(); ?>'">
+                    <div class="nav-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <span class="nav-label">QR</span>
+                </div>
+
+                <div class="nav-item" onclick="window.location.href='pasaporte.html'">
+                    <div class="nav-icon">
+                        <i class="fas fa-passport"></i>
+                    </div>
+                    <span class="nav-label">Pasaporte</span>
+                </div>
+
+                <!-- Perfil se mueve dentro de Otros -->
+
+                <div class="nav-item active" data-section="others">
+                    <div class="nav-icon">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    <span class="nav-label">Otros</span>
+                </div>
+            </div>
+
+            <!-- Indicador inferior del móvil -->
+            <div class="mobile-indicator">
+                <div class="mobile-indicator-bar"></div>
+            </div>
+        </div>
+
+        <!-- Incluir componente de utilidades -->
+        <div id="utilidadesContainer"><!-- Componente Toast Reutilizable -->
+            <style>
+                /* Estilos para el sistema de toast */
+                .toast-container {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 9999;
+                    pointer-events: none;
+                }
+
+                .toast {
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    margin-bottom: 10px;
+                    padding: 16px 20px;
+                    min-width: 300px;
+                    max-width: 400px;
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    transform: translateX(100%);
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                    pointer-events: auto;
+                    border-left: 4px solid;
+                }
+
+                .toast.show {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+
+                .toast.success {
+                    border-left-color: #22C1C3;
+                    color: #22C1C3;
+                }
+
+                .toast.error {
+                    border-left-color: #dc3545;
+                    color: #dc3545;
+                }
+
+                .toast.warning {
+                    border-left-color: #ffc107;
+                    color: #856404;
+                }
+
+                .toast.info {
+                    border-left-color: #17a2b8;
+                    color: #17a2b8;
+                }
+
+                .toast-icon {
+                    font-size: 20px;
+                    flex-shrink: 0;
+                }
+
+                .toast-content {
+                    flex: 1;
+                }
+
+                .toast-title {
+                    font-weight: 600;
+                    margin-bottom: 4px;
+                    font-size: 14px;
+                }
+
+                .toast-message {
+                    font-size: 13px;
+                    opacity: 0.9;
+                    line-height: 1.4;
+                }
+
+                .toast-close {
+                    background: none;
+                    border: none;
+                    color: inherit;
+                    cursor: pointer;
+                    font-size: 18px;
+                    opacity: 0.7;
+                    transition: opacity 0.2s;
+                    flex-shrink: 0;
+                    padding: 0;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .toast-close:hover {
+                    opacity: 1;
+                }
+
+                /* Animaciones */
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+
+                @keyframes slideOut {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+
+                .toast.slide-in {
+                    animation: slideIn 0.3s ease forwards;
+                }
+
+                .toast.slide-out {
+                    animation: slideOut 0.3s ease forwards;
+                }
+
+                /* Responsive */
+                @media (max-width: 768px) {
+                    .toast-container {
+                        top: 10px;
+                        right: 10px;
+                        left: 10px;
+                    }
+
+                    .toast {
+                        min-width: auto;
+                        max-width: none;
+                        width: 100%;
+                    }
+                }
+            </style>
+
+            <!-- Contenedor de toasts -->
+            <div id="toastContainer" class="toast-container"></div>
+
+            <!-- Template para toast -->
+            <template id="toastTemplate"></template>
+        </div>
+
+        <!-- Scripts -->
+        <script
+            src="./assets/bootstrap.bundle.min.js.descarga"></script>
+        <script
+            src="./assets/jquery-3.7.0.min.js.descarga"></script>
+        <script
+            src="./assets/jquery.dataTables.min.js.descarga"></script>
+        <script
+            src="./assets/dataTables.bootstrap5.min.js.descarga"></script>
+        <script
+            src="./assets/index.global.min.js.descarga"></script>
+        <script src="./assets/quill.min.js.descarga"></script>
+        <script src="./assets/tagify"></script>
+        <script src="./assets/config.js.descarga"></script>
+        <script src="./assets/app.js.descarga"></script>
+
+        <script>
+            // Modal de detalle para dashboard (JS real, fuera de <style>)
+            async function showNewsModalDashboard(id) {
+                try {
+                    const base = (window.APP_CONFIG && APP_CONFIG.apiBaseUrl) ? APP_CONFIG.apiBaseUrl : '../PHP/api/';
+                    const token = getAuthToken() || '';
+                    const url = base + 'news.php?action=get_one&id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(token);
+                    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+                    const json = await res.json();
+                    if (!json.success || !json.data) return;
+                    const n = json.data;
+                    let el = document.getElementById('viewNewsModal');
+                    if (!el) {
+                        const temp = document.createElement('div');
+                        temp.innerHTML = `
+                      <div class="modal fade" id="viewNewsModal" tabindex="-1">
+                        <div class="modal-dialog modal-lg modal-dialog-scrollable"> 
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="viewNewsTitle"></h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div id="viewNewsMeta" class="text-muted mb-2"></div>
+                              <img id="viewNewsImage" class="img-fluid rounded mb-3" style="display:none" alt="Imagen noticia" />
+                              <div id="viewNewsContent"></div>
+                            </div>
+                            <div class="modal-footer">
+                              <button class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`;
+                        document.body.appendChild(temp.firstElementChild);
+                        el = document.getElementById('viewNewsModal');
+                    }
+                    document.getElementById('viewNewsTitle').textContent = n.Titulo || 'Noticia';
+                    document.getElementById('viewNewsMeta').innerHTML = `<span class="badge bg-primary me-2">${n.Categoria || ''}</span> <small>Evento: ${n.Fecha_evento || ''} • Publicada: ${n.Fecha_publicacion || ''}</small>`;
+                    const img = document.getElementById('viewNewsImage');
+                    if (n.Imagen_url) { img.src = '../' + n.Imagen_url; img.style.display = 'block'; } else { img.style.display = 'none'; }
+                    document.getElementById('viewNewsContent').innerHTML = n.Contenido || '';
+                    new bootstrap.Modal(el).show();
+                } catch (e) { console.error('Error mostrando noticia:', e); }
+            }
+
+            // Actualizar información del header
+            function updateHeaderInfo() {
+                try {
+                    const userFullName = getUserFullName();
+                    const userEmail = getUserEmail();
+                    const cursoAcademico = getCursoAcademico();
+
+                    document.getElementById('userInfo').textContent = userFullName;
+                    document.getElementById('userEmail').textContent = userEmail;
+                    document.getElementById('cursoAcademico').textContent = cursoAcademico;
+                    document.getElementById('welcomeMessage').textContent = `¡Hola ${getUserInfo().nombre}! Bienvenido/a a tu intranet.`;
+                } catch (error) {
+                    console.error('Error actualizando header:', error);
+                }
+            }
+
+            // Verificar autenticación
+            function checkAuth() {
+                if (!isAuthenticated()) {
+                    window.location.href = './login.html';
+                    return;
+                }
+
+                try {
+                    updateHeaderInfo();
+                } catch (error) {
+                    console.error('Error al cargar datos del perfil:', error);
+                    window.location.href = './login.html';
+                }
+            }
+
+            // Navegación
+            function initNavigation() {
+                const navItems = document.querySelectorAll('.nav-item');
+                const contentSections = document.querySelectorAll('.content-section');
+
+                navItems.forEach(item => {
+                    item.addEventListener('click', function () {
+                        const section = this.getAttribute('data-section');
+
+                        // Remover clase active de todos los elementos
+                        navItems.forEach(nav => nav.classList.remove('active'));
+                        contentSections.forEach(content => content.classList.remove('active'));
+
+                        // Agregar clase active al elemento seleccionado
+                        this.classList.add('active');
+                        document.getElementById(section + '-section').classList.add('active');
+                        if (section === 'calendar') {
+                            ensureCalendarRendered();
+                        }
+                    });
+                });
+            }
+
+            // Cargar datos del dashboard
+            function loadDashboardData() {
+                // Simular carga de datos
+                document.getElementById('asignaturasCount').textContent = '6';
+                document.getElementById('notasCount').textContent = '12';
+                document.getElementById('horariosCount').textContent = '4';
+                document.getElementById('mensajesCount').textContent = '3';
+                // Mostrar tarjeta Delegado/a si corresponde
+                try {
+                    const user = getUserInfo();
+                    const isDelegado = (user?.rol || user?.Rol) === 'Delegado';
+                    const card = document.getElementById('delegadoCard');
+                    if (card) card.style.display = isDelegado ? 'block' : 'none';
+                } catch (_) { }
+                // Cargar carrusel de noticias
+                loadCarouselNoticias();
+            }
+
+            // Mostrar enlace "Inscripción al acto de Graduación" solo si estamos dentro del plazo (Configuracion.AperturaGraduacion / CierreGraduacion)
+            async function loadGraduacionVisibility() {
+                const link = document.getElementById('link-graduacion');
+                if (!link) return;
+                try {
+                    const token = getAuthToken();
+                    if (!token) { link.classList.add('d-none'); return; }
+                    const url = '../PHP/graduacion.php?action=plazo_visible&token=' + encodeURIComponent(token);
+                    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+                    const json = await res.json();
+                    if (json.success && json.data && json.data.visible) {
+                        link.classList.remove('d-none');
+                    } else {
+                        link.classList.add('d-none');
+                    }
+                } catch (_) {
+                    link.classList.add('d-none');
+                }
+            }
+
+            async function loadCarouselNoticias() {
+                try {
+                    const base = (window.APP_CONFIG && APP_CONFIG.apiBaseUrl) ? APP_CONFIG.apiBaseUrl : (window.APP_CONFIG?.apiBaseUrl || '../PHP/api/');
+                    const token = getAuthToken() || '';
+                    const url = base + 'news.php?action=carousel&limit=5&token=' + encodeURIComponent(token);
+                    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+                    if (res.status === 401) { clearSession(); window.location.href = './login.html'; return; }
+                    const json = await res.json();
+                    const container = document.getElementById('newsCarouselsContainer');
+                    container.innerHTML = '';
+                    if (json.success && json.data && Object.keys(json.data).length) {
+                        Object.entries(json.data).forEach(([categoria, items], idxCat) => {
+                            const carouselId = `newsCarousel_${idxCat}`;
+                            const block = document.createElement('div');
+                            block.className = 'mb-3';
+                            block.innerHTML = `
+                          <h5 class="mb-2">${categoria}</h5>
+                          <div id="${carouselId}" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner"></div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#${carouselId}" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Anterior</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#${carouselId}" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Siguiente</span>
+                            </button>
+                          </div>`;
+                            container.appendChild(block);
+                            const inner = block.querySelector('.carousel-inner');
+                            if (Array.isArray(items) && items.length) {
+                                // Ordenar por Fecha_evento asc
+                                items.sort((a, b) => {
+                                    const da = a.Fecha_evento ? new Date(a.Fecha_evento) : new Date(0);
+                                    const db = b.Fecha_evento ? new Date(b.Fecha_evento) : new Date(0);
+                                    return da - db;
+                                });
+                                items.forEach((n, idx) => {
+                                    const item = document.createElement('div');
+                                    item.className = 'carousel-item' + (idx === 0 ? ' active' : '');
+                                    const styleBase = n.Imagen_url
+                                        ? `background-image:url('../${n.Imagen_url}'); background-size:cover; background-position:center;`
+                                        : `background:#${Math.floor(Math.random() * 16777215).toString(16)};`;
+                                    const dm = (n.Fecha_evento && n.Fecha_evento.includes('-')) ? (() => { const [y, m, d] = n.Fecha_evento.split('-'); return (d && m) ? `${d}/${m}` : ''; })() : '';
+                                    const title = dm ? `${dm} ${n.Titulo}` : n.Titulo;
+                                    item.innerHTML = `<div class="d-flex align-items-end w-100 rounded news-slide" data-news-id="${n.Identificador}" style="${styleBase} min-height:160px; cursor:pointer">
+                                    <div class="p-3" style="background:rgba(0,0,0,0.4); width:100%">
+                                        <h6 class="text-white mb-1">${title}</h6>
+                                        <p class="text-white-50 mb-0">${n.Resumen || ''}</p>
+                                    </div>
+                                </div>`;
+                                    inner.appendChild(item);
+                                });
+                                inner.addEventListener('click', async (ev) => {
+                                    const slide = ev.target.closest('.news-slide');
+                                    if (!slide) return;
+                                    const id = slide.getAttribute('data-news-id');
+                                    await showNewsModalDashboard(id);
+                                });
+                            } else {
+                                inner.innerHTML = '<div class="carousel-item active"><div class="p-3 text-muted">Sin noticias</div></div>';
+                            }
+                        });
+                    } else {
+                        container.innerHTML = '<div class="text-muted">No hay noticias para hoy</div>';
+                    }
+                } catch (e) { console.error('Error carrusel noticias:', e); }
+            }
+
+            // Cargar incidencias (hoy a +15 días) para asignaturas matriculadas
+            async function loadIncidencias() {
+                try {
+                    const base = (window.APP_CONFIG && APP_CONFIG.apiBaseUrl) ? APP_CONFIG.apiBaseUrl : (window.APP_CONFIG?.apiBaseUrl || '../PHP/api/');
+                    const token = getAuthToken() || '';
+                    const curso = getCursoAcademico();
+                    const url = base + 'incidencias.php?action=list&curso=' + encodeURIComponent(curso) + '&token=' + encodeURIComponent(token);
+                    const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token }, cache: 'no-store' });
+                    if (res.status === 401) { clearSession(); window.location.href = './login.html'; return; }
+                    const json = await res.json();
+                    const rows = (json.success && Array.isArray(json.data)) ? json.data : [];
+                    const tbody = document.querySelector('#incidenciasTable tbody');
+                    if (!tbody) return;
+                    tbody.innerHTML = '';
+                    const fmt = (iso) => {
+                        if (!iso) return '';
+                        const [y, m, d] = String(iso).split('-');
+                        if (!y || !m || !d) return iso;
+                        return `${d.padStart(2, '0')}-${m.padStart(2, '0')}-${y}`;
+                    };
+                    rows.forEach(r => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                        <td>${fmt(r.Fecha) || ''}</td>
+                        <td>${r.Hora || ''}</td>
+                        <td>${r.Nombre || r.Asignatura || ''}</td>
+                        <td>${r.Grupo || ''}</td>
+                        <td>${r.Turno || ''}</td>
+                        <td>${r.TipoIncidencia || ''}</td>
+                        <td>${r.InformarAlumnos || ''}</td>
+                    `;
+                        tbody.appendChild(tr);
+                    });
+                    // Inicializar DataTable si no está
+                    if (!$.fn.DataTable.isDataTable('#incidenciasTable')) {
+                        $('#incidenciasTable').DataTable({
+                            order: [[0, 'asc'], [1, 'asc']],
+                            language: { url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
+                            pageLength: 5,
+                            lengthChange: false
+                        });
+                    } else {
+                        const dt = $('#incidenciasTable').DataTable();
+                        dt.clear();
+                        rows.forEach(r => dt.row.add([
+                            fmt(r.Fecha) || '', r.Hora || '', (r.Nombre || r.Asignatura || ''), r.Grupo || '', r.Turno || '', r.TipoIncidencia || '', r.InformarAlumnos || ''
+                        ]));
+                        dt.draw();
+                    }
+                } catch (e) { console.error('Error cargando incidencias:', e); }
+            }
+
+            // Cargar utilidades
+            async function loadUtilidades() {
+                try {
+                    const response = await fetch('utilidades.html');
+                    const html = await response.text();
+                    document.getElementById('utilidadesContainer').innerHTML = html;
+
+                    // Reinicializar ToastManager después de cargar el HTML
+                    if (window.toastManager) {
+                        window.toastManager.container = document.getElementById('toastContainer');
+                        window.toastManager.template = document.getElementById('toastTemplate');
+                    }
+                } catch (error) {
+                    console.error('Error cargando utilidades:', error);
+                }
+            }
+
+            // Variables globales para el calendario (FullCalendar)
+            let calendar;
+
+            // Inicializar calendario
+            function initCalendar() {
+                const calendarEl = document.getElementById('calendar');
+                if (calendarEl) {
+                    calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGridMonth',
+                        locale: 'es',
+                        themeSystem: 'bootstrap5',
+                        headerToolbar: { left: 'dayGridMonth,timeGridWeek,timeGridDay', center: 'title', right: 'today prev,next' },
+                        buttonText: {
+                            today: 'Hoy',
+                            month: 'Mes',
+                            week: 'Semana',
+                            day: 'Día'
+                        },
+                        height: 'auto',
+                        expandRows: true,
+                        dayMaxEvents: true,
+                        stickyHeaderDates: true,
+                        handleWindowResize: true,
+                        views: {
+                            timeGridWeek: {
+                                dayHeaderContent: function (arg) {
+                                    return String(arg.date.getDate());
+                                }
+                            }
+                        },
+                        // Rango horario para vistas semanal y diaria
+                        slotMinTime: '09:00:00',
+                        slotMaxTime: '21:00:00',
+                        scrollTime: '09:00:00',
+                        slotDuration: '00:30:00',
+                        events: loadCalendarEvents,
+                        eventClick: handleEventClick,
+                        selectable: true,
+                        select: handleDateSelect,
+                        editable: true,
+                        eventDrop: handleEventDrop,
+                        eventResize: handleEventResize,
+                        eventDidMount: function (info) {
+                            const type = info.event.extendedProps.type || 'evento';
+                            info.el.classList.add(type);
+                        }
+                    });
+                    calendar.render();
+                    setTimeout(() => { try { calendar.updateSize(); } catch (e) { } }, 50);
+                }
+            }
+
+            // Asegurar render cuando se muestra la sección calendario
+            function ensureCalendarRendered() {
+                const section = document.getElementById('calendar-section');
+                if (section && section.classList.contains('active')) {
+                    if (calendar) {
+                        setTimeout(() => { try { calendar.updateSize(); } catch (e) { } }, 0);
+                    } else {
+                        initCalendar();
+                    }
+                }
+            }
+
+            // Cargar eventos del calendario (fuente local simulada, sin errores)
+            function loadCalendarEvents(info, successCallback) {
+                const events = [
+                    { id: '1', title: 'Examen Matemáticas', start: '2025-01-15T10:00:00', end: '2025-01-15T12:00:00', type: 'examen' },
+                    { id: '2', title: 'Entrega Proyecto', start: '2025-01-20', type: 'entrega' }
+                ];
+                successCallback(events);
+            }
+
+            // Manejar clic en evento
+            function handleEventClick(info) {
+                showToast(info.event.title, 'info');
+            }
+
+            // Manejar selección de fecha
+            function handleDateSelect(info) {
+                // Sin creación directa (botón agregar fue eliminado); solo feedback
+            }
+
+            // Refrescar calendario
+            function refreshCalendar() {
+                if (calendar) {
+                    calendar.refetchEvents();
+                    showToast('Calendario actualizado', 'info');
+                }
+            }
+
+            // Manejar navegación desde URL hash
+            function handleHashNavigation() {
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    const targetSection = document.getElementById(hash + '-section');
+                    const targetNav = document.querySelector(`[data-section="${hash}"]`);
+
+                    if (targetSection && targetNav) {
+                        // Remover clase active de todos los elementos
+                        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                        document.querySelectorAll('.content-section').forEach(content => content.classList.remove('active'));
+
+                        // Agregar clase active al elemento seleccionado
+                        targetNav.classList.add('active');
+                        targetSection.classList.add('active');
+                        if (hash === 'calendar') {
+                            ensureCalendarRendered();
+                        }
+                    }
+                }
+            }
+
+            // Función para mostrar toast (temporal hasta que se carguen las utilidades)
+            function showToast(message, type = 'info') {
+                if (window.toastManager) {
+                    window.toastManager[type](message);
+                } else {
+                    console.log(`${type.toUpperCase()}: ${message}`);
+                }
+            }
+
+            // Manejar arrastre de eventos
+            function handleEventDrop(info) {
+                showToast('Evento movido correctamente', 'success');
+            }
+
+            // Manejar redimensionamiento de eventos
+            function handleEventResize(info) {
+                showToast('Evento redimensionado correctamente', 'success');
+            }
+
+            // Inicializar
+            document.addEventListener('DOMContentLoaded', function () {
+                // Cargar utilidades primero
+                loadUtilidades().then(() => {
+                    checkAuth();
+                    initNavigation();
+                    loadDashboardData();
+                    loadIncidencias();
+                    loadGraduacionVisibility();
+                    handleHashNavigation(); // Manejar navegación desde URL
+                    // No inicializamos el calendario aquí para evitar render oculto
+                });
+            });
+        </script>
+
+    </div>
+    <!-- Push Notifications Logic -->
+    <script src="JS/notifications.js"></script>
+</body>
+
+</html>

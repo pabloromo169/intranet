@@ -1,0 +1,382 @@
+/**
+ * Utilidades.js - Funciones reutilizables para la aplicación
+ * Incluye sistema de toast, validaciones, y otras utilidades comunes
+ */
+
+// Clase para manejo de toasts
+if (typeof ToastManager === 'undefined') {
+    class ToastManager {
+    constructor() {
+        this.container = document.getElementById('toastContainer');
+        this.template = document.getElementById('toastTemplate');
+        this.toasts = [];
+        this.maxToasts = 5;
+    }
+
+    /**
+     * Muestra un toast de éxito
+     * @param {string} message - Mensaje a mostrar
+     * @param {string} title - Título opcional
+     * @param {number} duration - Duración en milisegundos (por defecto 5000)
+     */
+    success(message, title = 'Éxito', duration = 5000) {
+        this.showToast(message, title, 'success', 'fa-check-circle', duration);
+    }
+
+    /**
+     * Muestra un toast de error
+     * @param {string} message - Mensaje a mostrar
+     * @param {string} title - Título opcional
+     * @param {number} duration - Duración en milisegundos (por defecto 7000)
+     */
+    error(message, title = 'Error', duration = 7000) {
+        this.showToast(message, title, 'error', 'fa-exclamation-circle', duration);
+    }
+
+    /**
+     * Muestra un toast de advertencia
+     * @param {string} message - Mensaje a mostrar
+     * @param {string} title - Título opcional
+     * @param {number} duration - Duración en milisegundos (por defecto 6000)
+     */
+    warning(message, title = 'Advertencia', duration = 6000) {
+        this.showToast(message, title, 'warning', 'fa-exclamation-triangle', duration);
+    }
+
+    /**
+     * Muestra un toast informativo
+     * @param {string} message - Mensaje a mostrar
+     * @param {string} title - Título opcional
+     * @param {number} duration - Duración en milisegundos (por defecto 5000)
+     */
+    info(message, title = 'Información', duration = 5000) {
+        this.showToast(message, title, 'info', 'fa-info-circle', duration);
+    }
+
+    /**
+     * Función principal para mostrar toasts
+     * @param {string} message - Mensaje a mostrar
+     * @param {string} title - Título del toast
+     * @param {string} type - Tipo de toast (success, error, warning, info)
+     * @param {string} icon - Clase del icono de Font Awesome
+     * @param {number} duration - Duración en milisegundos
+     */
+    showToast(message, title, type, icon, duration) {
+        // Limitar número de toasts
+        if (this.toasts.length >= this.maxToasts) {
+            this.removeToast(this.toasts[0]);
+        }
+
+        // Crear elemento toast
+        const toastElement = this.createToastElement(message, title, type, icon);
+        
+        // Agregar al contenedor
+        this.container.appendChild(toastElement);
+        this.toasts.push(toastElement);
+
+        // Mostrar con animación
+        setTimeout(() => {
+            toastElement.classList.add('show');
+        }, 100);
+
+        // Auto-remover después del tiempo especificado
+        if (duration > 0) {
+            setTimeout(() => {
+                this.removeToast(toastElement);
+            }, duration);
+        }
+
+        return toastElement;
+    }
+
+    /**
+     * Crea el elemento HTML del toast
+     * @param {string} message - Mensaje a mostrar
+     * @param {string} title - Título del toast
+     * @param {string} type - Tipo de toast
+     * @param {string} icon - Clase del icono
+     * @returns {HTMLElement} Elemento toast creado
+     */
+    createToastElement(message, title, type, icon) {
+        // Clonar template
+        const template = this.template.content.cloneNode(true);
+        const toast = template.querySelector('.toast');
+        
+        // Configurar contenido
+        toast.classList.add(type);
+        toast.querySelector('.toast-icon i').className = `fas ${icon}`;
+        toast.querySelector('.toast-title').textContent = title;
+        toast.querySelector('.toast-message').textContent = message;
+        
+        // Configurar botón de cerrar
+        const closeBtn = toast.querySelector('.toast-close');
+        closeBtn.onclick = () => this.removeToast(toast);
+        
+        return toast;
+    }
+
+    /**
+     * Remueve un toast específico
+     * @param {HTMLElement} toastElement - Elemento toast a remover
+     */
+    removeToast(toastElement) {
+        if (!toastElement || !this.toasts.includes(toastElement)) return;
+
+        // Animación de salida
+        toastElement.classList.add('slide-out');
+        
+        setTimeout(() => {
+            if (toastElement.parentNode) {
+                toastElement.parentNode.removeChild(toastElement);
+            }
+            const index = this.toasts.indexOf(toastElement);
+            if (index > -1) {
+                this.toasts.splice(index, 1);
+            }
+        }, 300);
+    }
+
+    /**
+     * Limpia todos los toasts
+     */
+    clearAll() {
+        this.toasts.forEach(toast => this.removeToast(toast));
+    }
+}
+
+// Instancia global del ToastManager
+if (typeof window.toastManager === 'undefined') {
+    window.toastManager = new ToastManager();
+}
+}
+
+// Funciones de utilidad para validación
+if (typeof Utils === 'undefined') {
+    const Utils = {
+    /**
+     * Valida si un email es válido
+     * @param {string} email - Email a validar
+     * @returns {boolean} True si es válido
+     */
+    isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    },
+
+    /**
+     * Valida si una contraseña cumple los requisitos mínimos
+     * @param {string} password - Contraseña a validar
+     * @param {number} minLength - Longitud mínima (por defecto 6)
+     * @returns {boolean} True si es válida
+     */
+    isValidPassword(password, minLength = 6) {
+        return password && password.length >= minLength;
+    },
+
+    /**
+     * Sanitiza texto para prevenir XSS
+     * @param {string} text - Texto a sanitizar
+     * @returns {string} Texto sanitizado
+     */
+    sanitizeText(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    },
+
+    /**
+     * Formatea fecha a formato legible
+     * @param {Date|string} date - Fecha a formatear
+     * @param {string} locale - Locale (por defecto 'es-ES')
+     * @returns {string} Fecha formateada
+     */
+    formatDate(date, locale = 'es-ES') {
+        const dateObj = new Date(date);
+        return dateObj.toLocaleDateString(locale, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    },
+
+    /**
+     * Formatea número con separadores de miles
+     * @param {number} number - Número a formatear
+     * @param {string} locale - Locale (por defecto 'es-ES')
+     * @returns {string} Número formateado
+     */
+    formatNumber(number, locale = 'es-ES') {
+        return new Intl.NumberFormat(locale).format(number);
+    },
+
+    /**
+     * Genera un ID único
+     * @returns {string} ID único
+     */
+    generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    },
+
+    /**
+     * Debounce function para optimizar llamadas
+     * @param {Function} func - Función a debounce
+     * @param {number} wait - Tiempo de espera en ms
+     * @returns {Function} Función debounced
+     */
+    debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+
+    /**
+     * Throttle function para limitar frecuencia de llamadas
+     * @param {Function} func - Función a throttle
+     * @param {number} limit - Límite de tiempo en ms
+     * @returns {Function} Función throttled
+     */
+    throttle(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    },
+
+    /**
+     * Copia texto al portapapeles
+     * @param {string} text - Texto a copiar
+     * @returns {Promise<boolean>} True si se copió exitosamente
+     */
+    async copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (err) {
+            // Fallback para navegadores antiguos
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            return successful;
+        }
+    },
+
+    /**
+     * Descarga un archivo
+     * @param {string} content - Contenido del archivo
+     * @param {string} filename - Nombre del archivo
+     * @param {string} mimeType - Tipo MIME
+     */
+    downloadFile(content, filename, mimeType = 'text/plain') {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    },
+
+    /**
+     * Verifica si el dispositivo es móvil
+     * @returns {boolean} True si es móvil
+     */
+    isMobile() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    },
+
+    /**
+     * Verifica si está en modo oscuro
+     * @returns {boolean} True si está en modo oscuro
+     */
+    isDarkMode() {
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+};
+}
+
+// Funciones de utilidad para API
+if (typeof ApiUtils === 'undefined') {
+    const ApiUtils = {
+    /**
+     * Realiza una llamada a la API
+     * @param {string} url - URL de la API
+     * @param {Object} options - Opciones de fetch
+     * @returns {Promise<Object>} Respuesta de la API
+     */
+    async apiCall(url, options = {}) {
+        try {
+            const defaultOptions = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                }
+            };
+
+            const response = await fetch(url, { ...defaultOptions, ...options });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || `Error ${response.status}`);
+            }
+
+            return data;
+        } catch (error) {
+            console.error('Error en llamada API:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Maneja errores de API y muestra toast
+     * @param {Error} error - Error capturado
+     * @param {string} context - Contexto del error
+     */
+    handleApiError(error, context = 'Operación') {
+        console.error(`Error en ${context}:`, error);
+        
+        let message = 'Ha ocurrido un error inesperado';
+        if (error.message) {
+            message = error.message;
+        } else if (error.status === 401) {
+            message = 'Sesión expirada. Por favor, inicia sesión nuevamente';
+        } else if (error.status === 403) {
+            message = 'No tienes permisos para realizar esta acción';
+        } else if (error.status === 404) {
+            message = 'Recurso no encontrado';
+        } else if (error.status >= 500) {
+            message = 'Error del servidor. Inténtalo más tarde';
+        }
+
+        window.toastManager.error(message, 'Error');
+    }
+};
+}
+
+// Exportar para uso global
+if (typeof window.Utils === 'undefined' && typeof Utils !== 'undefined') {
+    window.Utils = Utils;
+}
+if (typeof window.ApiUtils === 'undefined' && typeof ApiUtils !== 'undefined') {
+    window.ApiUtils = ApiUtils;
+}
+
+ 

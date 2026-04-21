@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Panel de Notificaciones</title>
+    <!-- Usamos los mismos assets que la intranet para consistencia -->
+    <link href="./assets/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/all.min.css">
+    <link rel="stylesheet" href="./assets/estilos.css">
+    <style>
+        :root {
+            --primary: #787902;
+            --secondary: #96964A;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .admin-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .header-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header-section i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .btn-send {
+            background-color: var(--primary);
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-send:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(120, 121, 2, 0.3);
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(120, 121, 2, 0.25);
+        }
+        #resultStatus {
+            margin-top: 20px;
+            display: none;
+        }
+        .preview-toast {
+            border-left: 5px solid var(--primary);
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-card">
+        <div class="header-section">
+            <i class="fas fa-paper-plane"></i>
+            <h2>Enviar Notificación Push</h2>
+            <p class="text-muted">Panel de Pruebas (Sin Login)</p>
+        </div>
+
+        <form id="pushForm">
+            <div class="mb-3">
+                <label class="form-label">Título de la Notificación</label>
+                <input type="text" id="title" class="form-control" placeholder="Ej: Nueva Alerta Académica" required value="⏰ NOTIFICACIÓN PUSH">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Mensaje</label>
+                <textarea id="body" class="form-control" rows="3" placeholder="Contenido del mensaje..." required>Este es un mensaje de prueba desde el panel de administración.</textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Icono (URL)</label>
+                    <input type="text" id="icon" class="form-control" placeholder="/assets/logoFacultad.jpg" value="/assets/logoFacultad.jpg">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">URL de destino</label>
+                    <input type="text" id="url" class="form-control" placeholder="/index_alumno.html" value="/index_alumno.html">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Token de Autorización (Opcional si usas Bypass)</label>
+                <input type="password" id="authToken" class="form-control" placeholder="Introduce el token JWT aquí...">
+                <small class="text-muted">Si no tienes token, asegúrate de activar el modo Bypass en la función.</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 btn-send">
+                <i class="fas fa-broadcast-tower me-2"></i> Enviar a todos los suscriptores
+            </button>
+        </form>
+
+        <div id="resultStatus" class="alert"></div>
+
+        <div class="mt-4">
+            <small class="text-muted">Vista previa:</small>
+            <div class="preview-toast shadow-sm">
+                <strong id="previewTitle">⏰ NOTIFICACIÓN PUSH</strong><br>
+                <span id="previewBody">Este es un mensaje de prueba desde el panel de administración.</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="./assets/jquery-3.7.0.min.js.descarga"></script>
+    <script>
+        // Sincronizar vista previa
+        $('#title').on('input', function() { $('#previewTitle').text($(this).val()); });
+        $('#body').on('input', function() { $('#previewBody').text($(this).val()); });
+
+        $('#pushForm').on('submit', async function(e) {
+            e.preventDefault();
+            
+            const $btn = $('.btn-send');
+            const $status = $('#resultStatus');
+            
+            $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-2"></i> Enviando...');
+            $status.hide();
+
+            const payload = {
+                title: $('#title').val(),
+                body: $('#body').val(),
+                icon: $('#icon').val(),
+                data: { url: $('#url').val() }
+            };
+
+            const token = $('#authToken').val() || localStorage.getItem('authToken');
+
+            try {
+                const response = await fetch('/.netlify/functions/send-push', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                        'X-Test-Bypass': 'true' // Para habilitar el bypass en la función
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    $status.removeClass('alert-danger').addClass('alert-success')
+                           .text('✅ Éxito: ' + result.message + ' (Enviado a ' + (result.count || 0) + ' dispositivos)')
+                           .fadeIn();
+                } else {
+                    $status.removeClass('alert-success').addClass('alert-danger')
+                           .text('❌ Error: ' + (result.error || 'No se pudo enviar la notificación'))
+                           .fadeIn();
+                }
+            } catch (error) {
+                $status.removeClass('alert-success').addClass('alert-danger')
+                       .text('❌ Error de conexión: ' + error.message)
+                       .fadeIn();
+            } finally {
+                $btn.prop('disabled', false).html('<i class="fas fa-broadcast-tower me-2"></i> Enviar a todos los suscriptores');
+            }
+        });
+    </script>
+</body>
+</html>

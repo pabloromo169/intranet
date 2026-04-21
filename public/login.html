@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)https://sibila.uca.es/intranet_alum/login.html -->
+<html lang="es">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <script async="" src="./login-assets/js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-S4BX5FGD41');
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intranet Alumnado - Universidad de Cádiz</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="./login-assets/logoFacultad.jpg">
+    <link rel="shortcut icon" type="image/jpeg"
+        href="./login-assets/logoFacultad.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="./login-assets/logoFacultad.jpg">
+    <link rel="shortcut icon" type="image/jpeg"
+        href="./login-assets/logoFacultad.jpg">
+    <link rel="apple-touch-icon" href="./login-assets/logoFacultad.jpg">
+    <meta name="msapplication-TileImage" content="Imagenes/Logos/logoFacultad.jpg">
+    <link rel="stylesheet" href="./login-assets/estilos.css">
+    <link href="./login-assets/all.min.css" rel="stylesheet">
+
+
+    <style>
+        /* Estilos específicos para el login */
+        .login-container {
+            min-height: 100vh;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efecto Lava Lamp */
+        .lava-lamp {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .lava {
+            filter: url("#goo");
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .blob {
+            border-radius: 50%;
+            background-image: linear-gradient(-206deg, #898b04 0%, #656701 100%);
+            position: absolute;
+        }
+
+        .blob.top {
+            border-radius: 50%;
+            width: 100%;
+            height: 4%;
+            top: -3%;
+            left: 0;
+        }
+
+        .blob.bottom {
+            border-radius: 50%;
+            width: 100%;
+            height: 4.5%;
+            bottom: -3%;
+            left: 0;
+        }
+
+        .blob:nth-child(1) {
+            width: 200px;
+            height: 200px;
+            left: 35%;
+            bottom: -15%;
+            animation: wobble 4s ease-in-out alternate infinite,
+                blob-one ease-in-out 18s infinite;
+        }
+
+        .blob:nth-child(2) {
+            width: 330px;
+            height: 330px;
+            right: 24%;
+            bottom: -65%;
+            animation: wobble 5s ease-in-out alternate infinite,
+                blob-two ease-in-out 22s infinite;
+        }
+
+        .blob:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: -15%;
+            left: 34%;
+            animation: wobble 6s ease-in-out alternate infinite,
+                blob-three ease-in-out 16s infinite;
+        }
+
+        .blob:nth-child(4) {
+            width: 235px;
+            height: 235px;
+            bottom: -19%;
+            left: 30%;
+            animation: wobble 8s ease-in-out alternate infinite,
+                blob-four ease-in-out 16s infinite;
+        }
+
+        .blob:nth-child(5) {
+            width: 55px;
+            height: 55px;
+            bottom: -25%;
+            left: 34%;
+            animation: wobble 9s ease-in-out alternate infinite,
+                blob-five ease-in-out 32s infinite;
+        }
+
+        .blob:nth-child(6) {
+            width: 35px;
+            height: 35px;
+            bottom: -25%;
+            right: 34%;
+            animation: wobble 10s ease-in-out alternate infinite,
+                blob-six ease-in-out 12s infinite;
+        }
+
+        .blob:nth-child(7) {
+            width: 435px;
+            height: 435px;
+            bottom: -85%;
+            right: 40%;
+            animation: wobble 11s ease-in-out alternate infinite,
+                blob-seven ease-in-out 32s infinite;
+        }
+
+        /* Animaciones de los blobs */
+        @keyframes blob-one {
+
+            0%,
+            100% {
+                transform: translatey(0);
+            }
+
+            50% {
+                transform: translatey(-600%);
+            }
+        }
+
+        @keyframes blob-two {
+
+            0%,
+            100% {
+                transform: translatey(0);
+            }
+
+            50% {
+                transform: translatey(-420%);
+            }
+        }
+
+        @keyframes blob-three {
+
+            0%,
+            100% {
+                transform: translatey(0);
+            }
+
+            50% {
+                transform: translatey(-305%);
+            }
+        }
+
+        @keyframes blob-four {
+
+            0%,
+            100% {
+                transform: translatey(0);
+            }
+
+            50% {
+                transform: translatey(-465%);
+            }
+        }
+
+        @keyframes blob-five {
+
+            0%,
+            100% {
+                transform: translatey(0);
+            }
+
+            50% {
+                transform: translatey(-700%);
+            }
+        }
+
+        @keyframes blob-six {
+
+            0%,
+            100% {
+                transform: translatey(0);
+            }
+
+            50% {
+                transform: translatey(-700%);
+            }
+        }
+
+        @keyframes blob-seven {
+
+            0%,
+            100% {
+                transform: translatey(0);
+            }
+
+            50% {
+                transform: translatey(-300%);
+            }
+        }
+
+        @keyframes wobble {
+            50% {
+                border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%;
+            }
+
+            100% {
+                border-radius: 38% 52% 75% 36% / 50% 40% 50% 60%;
+            }
+        }
+
+        .logo-section {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(100, 102, 1, 0.2);
+            margin: 0 auto;
+        }
+
+        .logo img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .login-form-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+            padding-top: 180px;
+            position: relative;
+            z-index: 20;
+        }
+
+        .login-form {
+            background: white;
+            border-radius: 8px;
+            padding: var(--spacing-2xl);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid #646601;
+        }
+
+        .login-title {
+            text-align: center;
+            color: #646601;
+            font-size: var(--font-size-2xl);
+            font-weight: 600;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .input-group i {
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(100, 102, 1, 0.7);
+            font-size: var(--font-size-lg);
+        }
+
+        .password-toggle {
+            left: auto !important;
+            right: var(--spacing-md) !important;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: #646601;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-md) var(--spacing-md) 3rem;
+            border: none;
+            border-bottom: 2px solid rgba(100, 102, 1, 0.5);
+            border-radius: 0;
+            font-size: var(--font-size-base);
+            background-color: transparent;
+            color: #646601;
+            transition: all 0.3s ease;
+        }
+
+        #password {
+            padding-right: 3rem;
+        }
+
+        #username {
+            padding-right: var(--spacing-md);
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-bottom-color: #646601;
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        .login-input::placeholder {
+            color: rgba(100, 102, 1, 0.6);
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+            font-size: var(--font-size-sm);
+            color: rgba(100, 102, 1, 0.8);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            color: rgba(100, 102, 1, 0.8);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #646601;
+        }
+
+
+
+        .login-btn {
+            width: 100%;
+            padding: var(--spacing-md);
+            background: #646601;
+            color: white;
+            border: 1px solid #646601;
+            border-radius: 8px;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(100, 102, 1, 0.3);
+            background: #787902;
+            border-color: #787902;
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .register-link {
+            text-align: center;
+            color: rgba(100, 102, 1, 0.8);
+            font-size: var(--font-size-sm);
+        }
+
+        .register-link a {
+            color: #646601;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+        .additional-links {
+            margin-top: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .forgot-password-link {
+            color: rgba(100, 102, 1, 0.6);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        .forgot-password-link a {
+            color: #646601;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-password-link a:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+
+
+
+        /* Responsive para móviles */
+        @media (max-width: 768px) {
+            .login-form {
+                padding: var(--spacing-xl);
+                margin: var(--spacing-md);
+            }
+
+            .login-form-container {
+                padding: var(--spacing-md);
+                padding-top: 80px;
+            }
+
+            .logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .logo img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Filtro SVG para el efecto goo -->
+    <svg style="position: absolute; width: 0; height: 0;" aria-hidden="true" focusable="false">
+        <defs>
+            <filter id="goo">
+                <fegaussianblur in="SourceGraphic" stdDeviation="10" result="blur"></fegaussianblur>
+                <fecolormatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+                    result="goo"></fecolormatrix>
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="login-container">
+        <!-- Efecto Lava Lamp -->
+        <div class="lava-lamp">
+            <div class="lava">
+                <div class="blob top"></div>
+                <div class="blob bottom"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+                <div class="blob"></div>
+            </div>
+        </div>
+        <!-- Logo en la esquina superior izquierda -->
+        <div class="logo-section">
+            <div class="logo">
+                <img src="./login-assets/logoFacultad.jpg" alt="Logo Facultad"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <span style="display: none; font-size: 24px; font-weight: bold; color: #646601;">LOGO</span>
+            </div>
+        </div>
+
+        <!-- Contenedor principal del formulario -->
+        <div class="login-form-container">
+            <div class="login-form fade-in">
+
+
+                <!-- Formulario -->
+                <form id="loginForm">
+                    <!-- Campo Usuario -->
+                    <div class="input-group">
+                        <i class="fas fa-user"></i>
+                        <input type="email" id="username" name="username" class="login-input" placeholder="Email"
+                            required="">
+                    </div>
+
+                    <!-- Campo Contraseña -->
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" name="password" class="login-input"
+                            placeholder="Contraseña" required="">
+                        <i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
+                    </div>
+
+                    <!-- Remember me -->
+                    <div class="form-options">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="rememberMe" name="rememberMe">
+                            <label for="rememberMe">Recordarme</label>
+                        </div>
+                    </div>
+
+                    <!-- Botón Login -->
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <span id="loginBtnText">Iniciar Sesión</span>
+                        <div id="loginSpinner" class="spinner" style="display: none; margin: 0 auto;"></div>
+                    </button>
+                </form>
+
+                <!-- Enlaces adicionales -->
+                <div class="additional-links">
+                    <div class="register-link">
+                        <span>¿No estás registrado? </span>
+                        <a href="https://sibila.uca.es/intranet_alum/login.html#" onclick="showRegister()">Crear
+                            cuenta</a>
+                    </div>
+                    <div class="forgot-password-link">
+                        <a href="https://sibila.uca.es/intranet_alum/forgot_password.html">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir componente de utilidades -->
+    <div id="utilidadesContainer"><!-- Componente Toast Reutilizable -->
+        <style>
+            /* Estilos para el sistema de toast */
+            .toast-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                pointer-events: none;
+            }
+
+            .toast {
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                margin-bottom: 10px;
+                padding: 16px 20px;
+                min-width: 300px;
+                max-width: 400px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transform: translateX(100%);
+                opacity: 0;
+                transition: all 0.3s ease;
+                pointer-events: auto;
+                border-left: 4px solid;
+            }
+
+            .toast.show {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            .toast.success {
+                border-left-color: #22C1C3;
+                color: #22C1C3;
+            }
+
+            .toast.error {
+                border-left-color: #dc3545;
+                color: #dc3545;
+            }
+
+            .toast.warning {
+                border-left-color: #ffc107;
+                color: #856404;
+            }
+
+            .toast.info {
+                border-left-color: #17a2b8;
+                color: #17a2b8;
+            }
+
+            .toast-icon {
+                font-size: 20px;
+                flex-shrink: 0;
+            }
+
+            .toast-content {
+                flex: 1;
+            }
+
+            .toast-title {
+                font-weight: 600;
+                margin-bottom: 4px;
+                font-size: 14px;
+            }
+
+            .toast-message {
+                font-size: 13px;
+                opacity: 0.9;
+                line-height: 1.4;
+            }
+
+            .toast-close {
+                background: none;
+                border: none;
+                color: inherit;
+                cursor: pointer;
+                font-size: 18px;
+                opacity: 0.7;
+                transition: opacity 0.2s;
+                flex-shrink: 0;
+                padding: 0;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .toast-close:hover {
+                opacity: 1;
+            }
+
+            /* Animaciones */
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+
+            .toast.slide-in {
+                animation: slideIn 0.3s ease forwards;
+            }
+
+            .toast.slide-out {
+                animation: slideOut 0.3s ease forwards;
+            }
+
+            /* Responsive */
+            @media (max-width: 768px) {
+                .toast-container {
+                    top: 10px;
+                    right: 10px;
+                    left: 10px;
+                }
+
+                .toast {
+                    min-width: auto;
+                    max-width: none;
+                    width: 100%;
+                }
+            }
+        </style>
+
+        <!-- Contenedor de toasts -->
+        <div id="toastContainer" class="toast-container"></div>
+
+        <!-- Template para toast -->
+        <template id="toastTemplate"></template>
+    </div>
+
+
+
+    <script>
+        // Cargar configuración global
+        async function loadConfigJS() {
+            try {
+                const response = await fetch('JS/config.js');
+
+                if (response.ok) {
+                    const text = await response.text();
+                    // Ejecutar el código
+                    eval(text);
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error cargando config.js:', error);
+                return false;
+            }
+        }
+
+        // Cargar utilidades JavaScript
+        async function loadUtilidadesJS() {
+            try {
+                const response = await fetch('JS/utilidades.js');
+
+                if (response.ok) {
+                    const text = await response.text();
+                    // Ejecutar el código
+                    eval(text);
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('Error cargando utilidades.js:', error);
+                return false;
+            }
+        }
+
+        // Variables globales
+        let isSubmitting = false;
+
+        // Elementos del DOM
+        const loginForm = document.getElementById('loginForm');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const rememberMeCheckbox = document.getElementById('rememberMe');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginBtnText = document.getElementById('loginBtnText');
+        const loginSpinner = document.getElementById('loginSpinner');
+
+        // Cargar utilidades
+        async function loadUtilidades() {
+            try {
+                // Primero cargar la configuración global
+                const configLoaded = await loadConfigJS();
+                if (!configLoaded) {
+                    console.error('No se pudo cargar config.js');
+                    return;
+                }
+
+                // Luego cargar el JavaScript de utilidades
+                const jsLoaded = await loadUtilidadesJS();
+                if (!jsLoaded) {
+                    console.error('No se pudo cargar utilidades.js');
+                    return;
+                }
+
+                // Luego cargar el HTML
+                const response = await fetch('HTML/utilidades.html');
+                const html = await response.text();
+                document.getElementById('utilidadesContainer').innerHTML = html;
+
+                // Reinicializar ToastManager después de cargar el HTML
+                if (window.toastManager) {
+                    window.toastManager.container = document.getElementById('toastContainer');
+                    window.toastManager.template = document.getElementById('toastTemplate');
+                }
+            } catch (error) {
+                console.error('Error cargando utilidades:', error);
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function () {
+            // Cargar utilidades primero
+            loadUtilidades().then(() => {
+                // Verificar si hay credenciales guardadas
+                checkSavedCredentials();
+
+                // Event listener para el formulario
+                loginForm.addEventListener('submit', handleLogin);
+            }).catch(error => {
+                console.error('Error en la configuración:', error);
+            });
+
+            // Event listeners para los inputs (los toasts se limpian automáticamente)
+            usernameInput.addEventListener('input', function () {
+                // Los toasts se limpian automáticamente
+            });
+            passwordInput.addEventListener('input', function () {
+                // Los toasts se limpian automáticamente
+            });
+        });
+
+        // Función para manejar el login
+        async function handleLogin(e) {
+            e.preventDefault();
+
+            if (isSubmitting) return;
+
+            const email = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            const rememberMe = rememberMeCheckbox.checked;
+
+            // Validaciones básicas
+            if (!email || !password) {
+                showError('Por favor, completa todos los campos');
+                return;
+            }
+
+            // Validar formato de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('Por favor, introduce un email válido');
+                return;
+            }
+
+            // Mostrar estado de carga
+            setLoadingState(true);
+
+            try {
+                // Llamada a la función de Netlify
+                const response = await fetch('/.netlify/functions/auth-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        usuario: email,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Guardar token y datos del usuario
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    localStorage.setItem('isLoggedIn', 'true');
+
+                    // Guardar credenciales si "recordarme" está marcado
+                    if (rememberMe) {
+                        saveCredentials(email, password);
+                    } else {
+                        clearSavedCredentials();
+                    }
+
+                    showSuccess('¡Autenticación exitosa!');
+
+                    // Redirigir después de un breve delay
+                    setTimeout(() => {
+                        window.location.href = './index_alumno.html';
+                    }, 1000);
+                } else {
+                    showError(data.message || 'Error en el inicio de sesión');
+                }
+            } catch (error) {
+                showError('Error de conexión. Inténtalo de nuevo.');
+                console.error('Error de login:', error);
+            } finally {
+                setLoadingState(false);
+            }
+        }
+
+        // Función para mostrar estado de carga
+        function setLoadingState(loading) {
+            isSubmitting = loading;
+            loginBtn.disabled = loading;
+
+            if (loading) {
+                loginBtnText.style.display = 'none';
+                loginSpinner.style.display = 'block';
+                loginBtn.classList.add('loading');
+            } else {
+                loginBtnText.style.display = 'block';
+                loginSpinner.style.display = 'none';
+                loginBtn.classList.remove('loading');
+            }
+        }
+
+        // Función para mostrar mensaje de error usando toast
+        function showError(message) {
+            if (window.toastManager) {
+                window.toastManager.error(message);
+            } else {
+                console.error('Toast manager no disponible:', message);
+            }
+        }
+
+        // Función para mostrar mensaje de éxito usando toast
+        function showSuccess(message) {
+            if (window.toastManager) {
+                window.toastManager.success(message);
+            } else {
+                console.log('Toast manager no disponible:', message);
+            }
+        }
+
+        // Función para limpiar mensajes (ya no necesaria con toast)
+        function clearMessages() {
+            // Los toasts se limpian automáticamente
+        }
+
+        // Función para guardar credenciales
+        function saveCredentials(username, password) {
+            try {
+                localStorage.setItem('savedUsername', username);
+                localStorage.setItem('savedPassword', password);
+                localStorage.setItem('rememberMe', 'true');
+            } catch (error) {
+                console.error('Error al guardar credenciales:', error);
+            }
+        }
+
+        // Función para limpiar credenciales guardadas
+        function clearSavedCredentials() {
+            try {
+                localStorage.removeItem('savedUsername');
+                localStorage.removeItem('savedPassword');
+                localStorage.removeItem('rememberMe');
+            } catch (error) {
+                console.error('Error al limpiar credenciales:', error);
+            }
+        }
+
+        // Función para verificar credenciales guardadas
+        function checkSavedCredentials() {
+            try {
+                const savedUsername = localStorage.getItem('savedUsername');
+                const savedPassword = localStorage.getItem('savedPassword');
+                const rememberMe = localStorage.getItem('rememberMe');
+
+                if (savedUsername && savedPassword && rememberMe === 'true') {
+                    usernameInput.value = savedUsername;
+                    passwordInput.value = savedPassword;
+                    rememberMeCheckbox.checked = true;
+                }
+            } catch (error) {
+                console.error('Error al cargar credenciales:', error);
+            }
+        }
+
+
+
+        // Función para mostrar modal de registro
+        function showRegister() {
+            window.location.href = 'register.html';
+        }
+
+        // Función para manejar errores de imagen del logo
+        function handleLogoError() {
+            const logoImg = document.querySelector('.logo img');
+            const logoText = document.querySelector('.logo span');
+
+            if (logoImg) {
+                logoImg.style.display = 'none';
+            }
+            if (logoText) {
+                logoText.style.display = 'block';
+            }
+        }
+
+        // Función para alternar la visibilidad de la contraseña
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordToggle = document.getElementById('passwordToggle');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordToggle.classList.remove('fa-eye');
+                passwordToggle.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordToggle.classList.remove('fa-eye-slash');
+                passwordToggle.classList.add('fa-eye');
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,125 @@
+/* Estilos pastel y responsive para FullCalendar */
+
+:root {
+  --cal-border: var(--border-color, #e5e7eb);
+  --cal-pastel-primary: #e6f7f8; /* basado en #22C1C3 */
+  --cal-pastel-info: #e6f4ff;   /* basado en #17a2b8 */
+  --cal-pastel-warning: #fff7e6;/* basado en #ffc107 */
+  --cal-pastel-danger: #fdeaea; /* basado en #dc3545 */
+  --cal-text-dark: var(--text-dark, #333);
+}
+
+#calendar {
+  width: 100%;
+  min-height: 520px; /* Requerido por Toast UI para pintar */
+}
+
+/* Controles de la tarjeta del calendario */
+.calendar-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-pastel {
+  background: #fff;
+  border: 1px solid var(--cal-border);
+  color: var(--cal-text-dark);
+  border-radius: 8px;
+  padding: 6px 12px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+.btn-pastel:hover { background: #f8fafc; }
+
+.btn-pastel-primary {
+  background: var(--cal-pastel-primary);
+  border-color: #22C1C3;
+  color: #0f5c5e;
+}
+.btn-pastel-primary:hover { filter: brightness(0.98); }
+
+.btn-pastel-secondary {
+  background: #f8fafc;
+  border-color: var(--cal-border);
+  color: var(--cal-text-dark);
+}
+.btn-pastel-secondary:hover { background: #f1f5f9; }
+
+/* Toolbar en dos filas cuando sea necesario */
+.fc .fc-toolbar.fc-header-toolbar {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--cal-text-dark);
+}
+
+@media (max-width: 576px) {
+  .fc .fc-toolbar.fc-header-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .fc .fc-toolbar-title {
+    font-size: 1rem;
+  }
+  .fc .fc-button-group,
+  .fc .fc-button {
+    width: 100%;
+  }
+}
+
+/* Botones estilo pastel */
+.fc .fc-button,
+.fc .fc-button-primary {
+  background: #fff;
+  border: 1px solid var(--cal-border);
+  color: var(--cal-text-dark);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  border-radius: 8px;
+}
+
+.fc .fc-button:hover,
+.fc .fc-button-primary:hover {
+  background: #f8fafc;
+}
+
+.fc .fc-button-primary.fc-button-active,
+.fc .fc-button-primary:focus {
+  background: var(--cal-pastel-primary);
+  border-color: #22C1C3;
+  color: #13696a;
+  box-shadow: none;
+}
+
+.fc .fc-button-group > .fc-button {
+  border-radius: 8px !important;
+}
+
+/* Celdas y hoy */
+.fc .fc-daygrid-day { border-color: var(--cal-border); }
+.fc .fc-daygrid-day-top { align-items: center; padding: 6px; }
+.fc .fc-daygrid-day-number { color: var(--cal-text-dark); }
+.fc .fc-day-today { background: #f3f9ff; }
+
+/* Eventos con esquinas redondeadas y colores pastel por tipo */
+.fc .fc-daygrid-event {
+  border-radius: 6px;
+  padding: 2px 4px;
+  font-size: 0.8rem;
+}
+
+.fc .fc-event.examen { background: var(--cal-pastel-danger); border-color: #dc3545; color: #7a1a1f; }
+.fc .fc-event.entrega { background: var(--cal-pastel-primary); border-color: #22C1C3; color: #0f5c5e; }
+.fc .fc-event.clase   { background: var(--cal-pastel-info);   border-color: #17a2b8; color: #0b5673; }
+.fc .fc-event.evento  { background: #eef2f7;                  border-color: #cbd5e1; color: #334155; }
+
+/* Modal de eventos en estilo pastel */
+.modal .modal-content { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+.modal .modal-header { background: var(--cal-pastel-primary); border-bottom: 1px solid #22C1C3; }
+.modal .modal-title { color: #0f5c5e; font-weight: 600; }
+.modal .modal-footer { background: #f9fafb; border-top: 1px solid var(--cal-border); }
+
+

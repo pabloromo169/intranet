@@ -1,0 +1,131 @@
+/**
+ * Estilos comunes para el header móvil
+ * Se puede incluir en cualquier página que necesite el header
+ */
+
+/* Header móvil */
+.mobile-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-logo {
+    flex-shrink: 0;
+}
+
+.header-logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+        .logo-fallback {
+            display: none !important;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .logo-fallback[style*="display: flex"] {
+            display: flex !important;
+        }
+
+.header-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.user-details span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.separator {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+}
+
+.header-actions {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md); /* igual que el resto de pantallas */
+}
+
+.header-actions i { font-size: 1.2rem; color: rgba(255, 255, 255, 0.9); }
+
+.header-logout-btn {
+    background: none; /* sin fondo para igualar el header */
+    border: none;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+.header-logout-btn:hover { opacity: 0.9; }
+.header-logout-btn i { color: #fff; font-size: 1.2rem; }
+
+/* Responsive para pantallas muy pequeñas */
+@media (max-width: 360px) {
+    .mobile-header {
+        padding: 10px 15px;
+    }
+    
+    .header-content {
+        gap: 10px;
+    }
+    
+    .header-logo img,
+    .logo-fallback {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .user-name {
+        font-size: 0.9rem;
+    }
+    
+    .user-details {
+        font-size: 0.75rem;
+        gap: 6px;
+    }
+} 

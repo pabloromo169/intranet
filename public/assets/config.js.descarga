@@ -1,0 +1,134 @@
+/**
+ * Configuración global de la aplicación
+ * Este archivo contiene parámetros que pueden ser modificados manualmente por el programador
+ */
+
+const APP_CONFIG = {
+    // Información de la aplicación
+    name: 'Intranet Alumnado',
+    version: '2.0.0',
+    
+    // Configuración del curso académico
+    cursoAcademico: {
+        actual: '2025/26',
+        inicio: '2025-09-01',
+        fin: '2026-06-30',
+        semestre1: {
+            inicio: '2025-09-01',
+            fin: '2026-01-31'
+        },
+        semestre2: {
+            inicio: '2026-02-01',
+            fin: '2026-06-30'
+        }
+    },
+    
+    // Configuración de la API
+    apiBaseUrl: '/intranet_alum/PHP/api/',
+    
+    // Configuración de sesión
+    sessionTimeout: 30 * 60 * 1000, // 30 minutos
+    
+    // Configuración de colores
+    colors: {
+        primary: '#656701',
+        primaryHover: '#787902',
+        secondary: '#030213',
+        success: '#28a745',
+        error: '#dc3545',
+        warning: '#ffc107',
+        info: '#17a2b8'
+    },
+    
+    // Configuración de la facultad
+    facultad: {
+        nombre: 'Facultad de Ciencias Sociales',
+        universidad: 'Universidad de Cádiz',
+        logo: 'Imagenes/Logos/logoFacultad.jpg'
+    }
+};
+
+// Función para obtener el curso académico actual
+function getCursoAcademico() {
+    return APP_CONFIG.cursoAcademico.actual;
+}
+
+// Función para obtener el semestre actual
+function getSemestreActual() {
+    const hoy = new Date();
+    const semestre1Inicio = new Date(APP_CONFIG.cursoAcademico.semestre1.inicio);
+    const semestre1Fin = new Date(APP_CONFIG.cursoAcademico.semestre1.fin);
+    const semestre2Inicio = new Date(APP_CONFIG.cursoAcademico.semestre2.inicio);
+    const semestre2Fin = new Date(APP_CONFIG.cursoAcademico.semestre2.fin);
+    
+    if (hoy >= semestre1Inicio && hoy <= semestre1Fin) {
+        return 1;
+    } else if (hoy >= semestre2Inicio && hoy <= semestre2Fin) {
+        return 2;
+    } else {
+        return 0; // Vacaciones
+    }
+}
+
+// Función para obtener información del usuario desde localStorage
+function getUserInfo() {
+    try {
+        const userData = localStorage.getItem('userData');
+        if (userData) {
+            return JSON.parse(userData);
+        }
+        return null;
+    } catch (error) {
+        console.error('Error al obtener datos del usuario:', error);
+        return null;
+    }
+}
+
+// Función para obtener el token de autenticación
+function getAuthToken() {
+    return localStorage.getItem('authToken');
+}
+
+// Función para verificar si el usuario está autenticado
+function isAuthenticated() {
+    const token = getAuthToken();
+    const userData = getUserInfo();
+    return !!(token && userData);
+}
+
+// Función para obtener el nombre completo del usuario
+function getUserFullName() {
+    const user = getUserInfo();
+    if (user) {
+        return `${user.nombre} ${user.apellidos}`.trim();
+    }
+    return '';
+}
+
+// Función para obtener el email del usuario
+function getUserEmail() {
+    const user = getUserInfo();
+    return user ? user.email : '';
+}
+
+// Función para limpiar datos de sesión
+function clearSession() {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('isLoggedIn');
+}
+
+// Exportar configuración para uso en otros archivos
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        APP_CONFIG,
+        getCursoAcademico,
+        getSemestreActual,
+        getUserInfo,
+        getAuthToken,
+        isAuthenticated,
+        getUserFullName,
+        getUserEmail,
+        clearSession
+    };
+} 

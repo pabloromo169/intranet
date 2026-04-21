@@ -1,0 +1,15 @@
+{
+  "name": "intranet-portal",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npx serve public",
+    "build": "echo 'No build step required for this simple app'"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "faunadb": "^4.8.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongodb": "^7.0.0",
+    "web-push": "^3.6.7"
+  }
+}

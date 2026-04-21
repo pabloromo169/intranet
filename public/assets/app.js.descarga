@@ -1,0 +1,510 @@
+/**
+ * Archivo JavaScript principal para la Intranet de Alumnos
+ * Contiene funciones comunes y utilidades para toda la aplicación
+ */
+
+// Clase principal de la aplicación
+class IntranetApp {
+    constructor() {
+        this.isAuthenticated = false;
+        this.currentUser = null;
+        this.sessionTimer = null;
+        this.init();
+    }
+
+    // Inicializar la aplicación
+    init() {
+        this.checkAuthentication();
+        this.setupEventListeners();
+        this.initializeLibraries();
+        this.startSessionTimer();
+    }
+
+    // Verificar autenticación
+    checkAuthentication() {
+        const token = localStorage.getItem('authToken');
+        const userData = localStorage.getItem('userData');
+        
+        if (token && userData) {
+            try {
+                this.currentUser = JSON.parse(userData);
+                this.isAuthenticated = true;
+                this.updateUIForAuthenticatedUser();
+            } catch (error) {
+                console.error('Error al parsear datos de usuario:', error);
+                this.logout();
+            }
+        } else {
+            this.redirectToLogin();
+        }
+    }
+
+    // Configurar event listeners globales
+    setupEventListeners() {
+        // Event listener para cerrar sesión
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[data-action="logout"]')) {
+                e.preventDefault();
+                this.logout();
+            }
+        });
+
+        // Event listener para navegación móvil
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[data-action="toggle-mobile-menu"]')) {
+                e.preventDefault();
+                this.toggleMobileMenu();
+            }
+        });
+
+        // Event listener para cerrar modales
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('[data-action="close-modal"]') || 
+                e.target.classList.contains('modal-overlay')) {
+                e.preventDefault();
+                this.closeModal();
+            }
+        });
+
+        // Event listener para tecla Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeModal();
+            }
+        });
+    }
+
+    // Inicializar librerías externas
+    initializeLibraries() {
+        // Inicializar Bootstrap si está disponible
+        if (typeof bootstrap !== 'undefined') {
+            // Bootstrap ya está inicializado
+        }
+
+        // Inicializar DataTables si está disponible
+        if (typeof $.fn.DataTable !== 'undefined') {
+            this.initializeDataTables();
+        }
+
+        // FullCalendar se gestiona ahora en páginas específicas (p. ej., JS/calendar.js)
+
+        // Quill se inicializa de forma local en páginas que lo usan (p.ej., news.html)
+
+        // Inicializar Tagify si está disponible
+        if (typeof Tagify !== 'undefined') {
+            this.initializeTagify();
+        }
+    }
+
+    // Inicializar DataTables
+    initializeDataTables() {
+        const tables = document.querySelectorAll('.datatable');
+        tables.forEach(table => {
+            $(table).DataTable({
+                responsive: true,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json'
+                },
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, 50], [5, 10, 25, 50]],
+                dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>' +
+                     '<"row"<"col-sm-12"tr>>' +
+                     '<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+    }
+
+    // Inicializar FullCalendar
+    initializeFullCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        if (calendarEl) {
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'es',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: 'Hoy',
+                    month: 'Mes',
+                    week: 'Semana',
+                    day: 'Día'
+                },
+                events: this.loadCalendarEvents.bind(this),
+                eventClick: this.handleEventClick.bind(this),
+                selectable: true,
+                select: this.handleDateSelect.bind(this)
+            });
+            calendar.render();
+        }
+    }
+
+    // Inicializar Quill
+    initializeQuill() {
+        const editors = document.querySelectorAll('.quill-editor');
+        editors.forEach(editor => {
+            new Quill(editor, {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'align': [] }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'Escribe aquí...'
+            });
+        });
+    }
+
+    // Inicializar Tagify
+    initializeTagify() {
+        const tagInputs = document.querySelectorAll('.tagify-input');
+        tagInputs.forEach(input => {
+            new Tagify(input, {
+                whitelist: [],
+                maxTags: 10,
+                dropdown: {
+                    maxItems: 20,
+                    classname: "tags-look",
+                    enabled: 0,
+                    closeOnSelect: false
+                }
+            });
+        });
+    }
+
+    // Cargar eventos del calendario
+    async loadCalendarEvents(info, successCallback, failureCallback) {
+        try {
+            const response = await this.apiCall('GET', 'events.php', {
+                start: info.startStr,
+                end: info.endStr
+            });
+            
+            if (response.success) {
+                successCallback(response.data);
+            } else {
+                failureCallback(response.message);
+            }
+        } catch (error) {
+            failureCallback('Error al cargar eventos');
+        }
+    }
+
+    // Manejar clic en evento del calendario
+    handleEventClick(info) {
+        this.showEventModal(info.event);
+    }
+
+    // Manejar selección de fecha en calendario
+    handleDateSelect(info) {
+        this.showEventModal(null, info.startStr);
+    }
+
+    // Mostrar modal de evento
+    showEventModal(event = null, date = null) {
+        const modal = document.getElementById('eventModal');
+        if (modal) {
+            // Configurar modal según si es nuevo evento o edición
+            if (event) {
+                // Editar evento existente
+                document.getElementById('eventTitle').value = event.title;
+                document.getElementById('eventDate').value = event.startStr.split('T')[0];
+                document.getElementById('eventTime').value = event.startStr.split('T')[1]?.substring(0, 5) || '';
+                document.getElementById('eventDescription').value = event.extendedProps.description || '';
+            } else {
+                // Nuevo evento
+                document.getElementById('eventTitle').value = '';
+                document.getElementById('eventDate').value = date?.split('T')[0] || '';
+                document.getElementById('eventTime').value = '';
+                document.getElementById('eventDescription').value = '';
+            }
+            
+            // Mostrar modal
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        }
+    }
+
+    // Actualizar UI para usuario autenticado
+    updateUIForAuthenticatedUser() {
+        const userElements = document.querySelectorAll('[data-user-info]');
+        userElements.forEach(element => {
+            const field = element.getAttribute('data-user-info');
+            if (this.currentUser && this.currentUser[field]) {
+                element.textContent = this.currentUser[field];
+            }
+        });
+
+        // Mostrar elementos para usuarios autenticados
+        document.querySelectorAll('.auth-only').forEach(el => {
+            el.style.display = 'block';
+        });
+
+        // Ocultar elementos para usuarios no autenticados
+        document.querySelectorAll('.guest-only').forEach(el => {
+            el.style.display = 'none';
+        });
+    }
+
+    // Iniciar timer de sesión
+    startSessionTimer() {
+        if (this.sessionTimer) {
+            clearTimeout(this.sessionTimer);
+        }
+        
+        // Usar configuración desde config.js
+        const sessionTimeout = window.APP_CONFIG ? APP_CONFIG.sessionTimeout : 30 * 60 * 1000;
+        this.sessionTimer = setTimeout(() => {
+            this.showSessionWarning();
+        }, sessionTimeout - 60000); // 1 minuto antes
+    }
+
+    // Mostrar advertencia de sesión
+    showSessionWarning() {
+        const warning = document.createElement('div');
+        warning.className = 'session-warning';
+        warning.innerHTML = `
+            <div class="session-warning-content">
+                <h4>Tu sesión expirará pronto</h4>
+                <p>¿Deseas continuar con la sesión?</p>
+                <button onclick="app.extendSession()" class="btn btn-primary">Continuar</button>
+                <button onclick="app.logout()" class="btn btn-secondary">Cerrar sesión</button>
+            </div>
+        `;
+        
+        document.body.appendChild(warning);
+        
+        // Auto-cerrar después de 5 minutos
+        setTimeout(() => {
+            if (warning.parentNode) {
+                this.logout();
+            }
+        }, 5 * 60 * 1000);
+    }
+
+    // Extender sesión
+    async extendSession() {
+        try {
+            const response = await this.apiCall('POST', 'extend-session.php');
+            if (response.success) {
+                this.removeSessionWarning();
+                this.startSessionTimer();
+                this.showNotification('Sesión extendida', 'success');
+            }
+        } catch (error) {
+            console.error('Error al extender sesión:', error);
+        }
+    }
+
+    // Remover advertencia de sesión
+    removeSessionWarning() {
+        const warning = document.querySelector('.session-warning');
+        if (warning) {
+            warning.remove();
+        }
+    }
+
+    // Alternar menú móvil
+    toggleMobileMenu() {
+        const menu = document.querySelector('.mobile-menu');
+        const overlay = document.querySelector('.mobile-menu-overlay');
+        
+        if (menu && overlay) {
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        }
+    }
+
+    // Cerrar modal
+    closeModal() {
+        const modals = document.querySelectorAll('.modal.show');
+        modals.forEach(modal => {
+            const bootstrapModal = bootstrap.Modal.getInstance(modal);
+            if (bootstrapModal) {
+                bootstrapModal.hide();
+            }
+        });
+    }
+
+    // Función para hacer llamadas a la API
+    async apiCall(method, endpoint, data = null) {
+        // Usar configuración desde config.js
+        const apiBaseUrl = window.APP_CONFIG ? APP_CONFIG.apiBaseUrl : '/PHP/api/';
+        const url = apiBaseUrl + endpoint;
+        const options = {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+        };
+
+        if (data && method !== 'GET') {
+            options.body = JSON.stringify(data);
+        }
+
+        if (data && method === 'GET') {
+            const params = new URLSearchParams(data);
+            url += '?' + params.toString();
+        }
+
+        try {
+            const response = await fetch(url, options);
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.message || 'Error en la petición');
+            }
+            
+            return result;
+        } catch (error) {
+            console.error('Error en API call:', error);
+            throw error;
+        }
+    }
+
+    // Mostrar notificación
+    showNotification(message, type = 'info', duration = 5000) {
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <span class="notification-message">${message}</span>
+                <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Auto-remover después del tiempo especificado
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, duration);
+    }
+
+    // Función de logout
+    logout() {
+        // Limpiar datos de sesión
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('rememberMe');
+        
+        // Limpiar timer de sesión
+        if (this.sessionTimer) {
+            clearTimeout(this.sessionTimer);
+        }
+        
+        // Remover advertencia de sesión si existe
+        this.removeSessionWarning();
+        
+        // Redirigir al login
+        this.redirectToLogin();
+    }
+
+    // Redirigir al login
+    redirectToLogin() {
+        if (!window.location.pathname.endsWith('/login.html')) {
+            window.location.href = './login.html';
+        }
+    }
+
+    // Función para validar formularios
+    validateForm(formElement) {
+        const inputs = formElement.querySelectorAll('input[required], select[required], textarea[required]');
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (!input.value.trim()) {
+                this.showFieldError(input, 'Este campo es obligatorio');
+                isValid = false;
+            } else {
+                this.clearFieldError(input);
+            }
+        });
+        
+        return isValid;
+    }
+
+    // Mostrar error en campo
+    showFieldError(field, message) {
+        this.clearFieldError(field);
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'field-error';
+        errorDiv.textContent = message;
+        
+        field.classList.add('error');
+        field.parentNode.appendChild(errorDiv);
+    }
+
+    // Limpiar error de campo
+    clearFieldError(field) {
+        field.classList.remove('error');
+        const errorDiv = field.parentNode.querySelector('.field-error');
+        if (errorDiv) {
+            errorDiv.remove();
+        }
+    }
+
+    // Función para formatear fechas
+    formatDate(date, format = 'DD/MM/YYYY') {
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        
+        return format
+            .replace('DD', day)
+            .replace('MM', month)
+            .replace('YYYY', year);
+    }
+
+    // Función para formatear moneda
+    formatCurrency(amount, currency = 'EUR') {
+        return new Intl.NumberFormat('es-ES', {
+            style: 'currency',
+            currency: currency
+        }).format(amount);
+    }
+
+    // Función para generar IDs únicos
+    generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2);
+    }
+}
+
+// Inicializar la aplicación cuando el DOM esté listo
+let app;
+document.addEventListener('DOMContentLoaded', function() {
+    app = new IntranetApp();
+});
+
+// Exportar para uso global
+window.app = app;
+
+// Función global de logout
+function logout() {
+    if (window.app) {
+        window.app.logout();
+    } else {
+        // Fallback si la app no está disponible
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userData');
+        localStorage.removeItem('rememberMe');
+        window.location.href = './login.html';
+    }
+} 
