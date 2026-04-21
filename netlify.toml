@@ -6,3 +6,6 @@
   from = "/*"
   to = "/index_alumno.html"
   status = 200
+
+[build.environment]
+  SECRETS_SCAN_OMIT_PATHS = "public/JS/notifications.js"
