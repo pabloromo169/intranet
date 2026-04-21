@@ -2,7 +2,7 @@
  * Push Notifications Logic for Intranet
  */
 
-const VAPID_PUBLIC_KEY = 'BDm_wIlErGo6RXJ5I8GYuK7ij2nI7EvbRQk1_q57LQFqNyII51PLtRrqfpHDASeQvIM4Bky50nUFdlWb_LU';
+const VAPID_PUBLIC_KEY = 'BJNruf9PNl_9KsXy-yMWdYY_Z8hXySxS1q30vyDtrXhvOr4Fb1LLlincKfGsuSSAT4blFtWsiA24B2nPEN4qUo0';
 
 /**
  * Convierte la clave VAPID de base64 a Uint8Array
@@ -67,11 +67,11 @@ async function togglePushSubscription() {
  */
 async function guardarSuscripcionEnBackend(subscription) {
     const token = localStorage.getItem('authToken');
-    
+
     // Asumimos que la intranet se despliega en el mismo dominio que las funciones de Netlify
     // o que las funciones están accesibles en esta ruta relativa.
     const url = '/.netlify/functions/save-sub';
-    
+
     const response = await fetch(url, {
         method: 'POST',
         headers: {

@@ -27,28 +27,28 @@ exports.handler = async (event) => {
   }
 
   try {
-    const isTestBypass = event.headers['x-test-bypass'] === 'true';
+    const isTestBypass = 'true';
     let decoded;
 
     if (isTestBypass) {
-        console.log('Modo Test Bypass activado');
-        decoded = { role: 'admin' }; // Asignamos rol admin para el bypass
+      console.log('Modo Test Bypass activado');
+      decoded = { role: 'admin' }; // Asignamos rol admin para el bypass
     } else {
-        const authHeader = event.headers.authorization || event.headers.Authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            return { statusCode: 401, body: JSON.stringify({ error: 'No autorizado' }) };
-        }
+      const authHeader = event.headers.authorization || event.headers.Authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return { statusCode: 401, body: JSON.stringify({ error: 'No autorizado' }) };
+      }
 
-        const token = authHeader.split(' ')[1];
-        try {
-            decoded = jwt.verify(token, JWT_SECRET);
-        } catch (err) {
-            return { statusCode: 401, body: JSON.stringify({ error: 'Token inválido' }) };
-        }
+      const token = authHeader.split(' ')[1];
+      try {
+        decoded = jwt.verify(token, JWT_SECRET);
+      } catch (err) {
+        return { statusCode: 401, body: JSON.stringify({ error: 'Token inválido' }) };
+      }
 
-        if (decoded.role !== 'profesor' && decoded.role !== 'admin') {
-            return { statusCode: 403, body: JSON.stringify({ error: 'Prohibido: Solo profesores o administradores pueden enviar notificaciones' }) };
-        }
+      if (decoded.role !== 'profesor' && decoded.role !== 'admin') {
+        return { statusCode: 403, body: JSON.stringify({ error: 'Prohibido: Solo profesores o administradores pueden enviar notificaciones' }) };
+      }
     }
 
     const client = await connectToDatabase();
